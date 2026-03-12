@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BibDeal.com — Blueprint Triển Khai Hệ Thống</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a28;
+  --gold: #f0b429;
+  --gold-dim: #c4922a;
+  --gold-glow: rgba(240, 180, 41, 0.15);
+  --orange: #ff6b35;
+  --green: #22c55e;
+  --blue: #3b82f6;
+  --purple: #a855f7;
+  --red: #ef4444;
+  --cyan: #06b6d4;
+  --text-primary: #e8e8ed;
+  --text-secondary: #8b8b9e;
+  --text-muted: #5a5a6e;
+  --border: #2a2a3a;
+  --border-gold: rgba(240, 180, 41, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(240, 180, 41, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 30%, rgba(255, 107, 53, 0.04) 0%, transparent 50%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-2%, 2%) rotate(1deg); }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(240, 180, 41, 0.1);
+  border: 1px solid var(--border-gold);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 7vw, 80px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin-top: 24px;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 56px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat .number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hero-stat .label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== NAV TABS ===== */
+.nav-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 15, 0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.nav-tab {
+  padding: 16px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.nav-tab:hover { color: var(--text-secondary); }
+.nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ===== SECTIONS ===== */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.section-header {
+  margin-bottom: 56px;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.section-label .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.section-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  max-width: 700px;
+}
+
+/* ===== ECOSYSTEM FLYWHEEL ===== */
+.flywheel-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.flywheel-visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.flywheel-ring {
+  position: absolute;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  animation: slowSpin 30s linear infinite;
+}
+
+.flywheel-ring.outer {
+  inset: 0;
+  border-color: rgba(240, 180, 41, 0.15);
+}
+
+.flywheel-ring.middle {
+  inset: 15%;
+  border-color: rgba(255, 107, 53, 0.15);
+  animation-direction: reverse;
+  animation-duration: 25s;
+}
+
+.flywheel-ring.inner {
+  inset: 30%;
+  border-color: rgba(34, 197, 94, 0.2);
+  animation-duration: 20s;
+}
+
+.flywheel-center {
+  position: absolute;
+  inset: 38%;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  box-shadow: 0 0 60px rgba(240, 180, 41, 0.2);
+}
+
+.flywheel-center .icon { font-size: 28px; }
+.flywheel-center .text {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
+  margin-top: 4px;
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.flywheel-node {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  transition: all 0.3s;
+  z-index: 2;
+}
+
+.flywheel-node:hover {
+  border-color: var(--gold);
+  transform: scale(1.08);
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.flywheel-node .node-icon { font-size: 24px; margin-bottom: 6px; }
+.flywheel-node .node-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+
+.flywheel-node:nth-child(5) { top: -5%; left: 50%; transform: translateX(-50%); }
+.flywheel-node:nth-child(6) { top: 25%; right: -5%; }
+.flywheel-node:nth-child(7) { bottom: 10%; right: 5%; }
+.flywheel-node:nth-child(8) { bottom: -5%; left: 50%; transform: translateX(-50%); }
+.flywheel-node:nth-child(9) { bottom: 10%; left: 5%; }
+.flywheel-node:nth-child(10) { top: 25%; left: -5%; }
+
+.flywheel-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fw-step {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.3s;
+}
+
+.fw-step:hover {
+  border-color: var(--border-gold);
+  background: var(--bg-card-hover);
+}
+
+.fw-step-num {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #000;
+}
+
+.fw-step-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.fw-step-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== PHASE CARDS ===== */
+.phases-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.phase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.phase-card:hover {
+  border-color: var(--border-gold);
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 32px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.phase-badge {
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.phase-1 .phase-badge { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+.phase-2 .phase-badge { background: rgba(240, 180, 41, 0.15); color: var(--gold); border: 1px solid var(--border-gold); }
+.phase-3 .phase-badge { background: rgba(59, 130, 246, 0.15); color: var(--blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+.phase-4 .phase-badge { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+
+.phase-info { flex: 1; }
+.phase-info h3 { font-size: 18px; font-weight: 700; }
+.phase-info .timeline { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+.phase-toggle {
+  font-size: 20px;
+  color: var(--text-muted);
+  transition: transform 0.3s;
+}
+
+.phase-card.open .phase-toggle { transform: rotate(180deg); }
+
+.phase-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.phase-card.open .phase-body {
+  max-height: 3000px;
+}
+
+.phase-content {
+  padding: 0 32px 32px;
+}
+
+.phase-why {
+  padding: 16px 20px;
+  background: rgba(240, 180, 41, 0.05);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.phase-why strong { color: var(--gold); }
+
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.deliverable {
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.deliverable:hover {
+  border-color: var(--border-gold);
+  background: rgba(240, 180, 41, 0.03);
+}
+
+.deliverable-icon { font-size: 28px; margin-bottom: 12px; }
+
+.deliverable h5 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.deliverable p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.deliverable .tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.tech-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--cyan);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ===== AI AGENT SECTION ===== */
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.ai-card {
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.ai-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--orange));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.ai-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+
+.ai-card:hover::before { opacity: 1; }
+
+.ai-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.ai-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.ai-card-header h4 { font-size: 15px; font-weight: 700; }
+.ai-card-header .ai-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--purple);
+}
+
+.ai-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.ai-savings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+/* ===== REVENUE MODEL ===== */
+.revenue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.revenue-card {
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.revenue-card:hover { border-color: var(--border-gold); }
+
+.revenue-icon { font-size: 36px; margin-bottom: 16px; }
+.revenue-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+
+.revenue-card .amount {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.revenue-card .detail {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== RISK ===== */
+.risk-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.risk-table th {
+  padding: 14px 20px;
+  background: rgba(240, 180, 41, 0.08);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  text-align: left;
+  font-weight: 600;
+}
+
+.risk-table td {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.risk-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+.risk-level {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.risk-high { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+.risk-med { background: rgba(240, 180, 41, 0.15); color: var(--gold); }
+.risk-low { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+/* ===== KPI ===== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.kpi-card .kpi-value {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--gold);
+}
+
+.kpi-card .kpi-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+.kpi-card .kpi-target {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 48px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.footer strong { color: var(--gold); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .flywheel-container { grid-template-columns: 1fr; }
+  .flywheel-visual { max-width: 360px; }
+  .hero-stats { gap: 24px; }
+  .nav-tabs { overflow-x: auto; justify-content: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .deliverables-grid { grid-template-columns: 1fr; }
+  .ai-grid { grid-template-columns: 1fr; }
+  .revenue-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .risk-table { font-size: 12px; }
+  .risk-table th, .risk-table td { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="hero-badge">▲ Internal Strategy Blueprint</div>
+  <h1>
+    <span class="highlight">BibDeal.com</span><br>
+    Hệ Thống Triển Khai
+  </h1>
+  <p class="hero-subtitle">
+    Từ cộng đồng 70K runners → Platform mua bán bib + loyalty + deals thương hiệu. 
+    Blueprint chi tiết 4 phases, AI Agent automation & mô hình doanh thu.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="number">70K+</div>
+      <div class="label">Members Bib Market</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">400K</div>
+      <div class="label">Runner Emails</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">4</div>
+      <div class="label">Phases</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">6</div>
+      <div class="label">AI Agents</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NAV ===== -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" data-section="ecosystem">Hệ Sinh Thái</div>
+  <div class="nav-tab" data-section="phases">Phases Triển Khai</div>
+  <div class="nav-tab" data-section="ai">AI Agents</div>
+  <div class="nav-tab" data-section="revenue">Doanh Thu</div>
+  <div class="nav-tab" data-section="risks">Rủi Ro</div>
+  <div class="nav-tab" data-section="kpis">KPIs</div>
+</nav>
+
+<!-- ===== SECTION 1: ECOSYSTEM ===== -->
+<section class="section" id="ecosystem">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> Tổng Quan Hệ Sinh Thái</div>
+    <h2 class="section-title">Flywheel Model: Bib Market → BibDeal.com</h2>
+    <p class="section-desc">Cơ chế vòng quay tự tăng trưởng — mỗi thành phần nuôi thành phần kế tiếp. Chìa khóa: Escrow là "killer feature" để kéo user rời group Facebook sang web.</p>
+  </div>
+
+  <div class="flywheel-container">
+    <div class="flywheel-visual">
+      <div class="flywheel-ring outer"></div>
+      <div class="flywheel-ring middle"></div>
+      <div class="flywheel-ring inner"></div>
+      <div class="flywheel-center">
+        <span class="icon">🔥</span>
+        <span class="text">BibDeal</span>
+      </div>
+      <div class="flywheel-node" style="top:-5%;left:50%;transform:translateX(-50%)">
+        <span class="node-icon">👥</span>
+        <span class="node-label">Bib Market<br>70K</span>
+      </div>
+      <div class="flywheel-node" style="top:22%;right:-8%">
+        <span class="node-icon">🔒</span>
+        <span class="node-label">Escrow<br>Giữ Tiền</span>
+      </div>
+      <div class="flywheel-node" style="bottom:15%;right:-2%">
+        <span class="node-icon">🎫</span>
+        <span class="node-label">Mua Bib<br>Nhóm</span>
+      </div>
+      <div class="flywheel-node" style="bottom:-8%;left:50%;transform:translateX(-50%)">
+        <span class="node-icon">⭐</span>
+        <span class="node-label">Tích Điểm<br>Loyalty</span>
+      </div>
+      <div class="flywheel-node" style="bottom:15%;left:-2%">
+        <span class="node-icon">🎁</span>
+        <span class="node-label">Brand<br>Vouchers</span>
+      </div>
+      <div class="flywheel-node" style="top:22%;left:-8%">
+        <span class="node-icon">📊</span>
+        <span class="node-label">Data &<br>Insights</span>
+      </div>
+    </div>
+
+    <div class="flywheel-steps">
+      <div class="fw-step">
+        <div class="fw-step-num">1</div>
+        <div class="fw-step-content">
+          <h4>Thu hút — Bib Market làm "mồi câu"</h4>
+          <p>70K members là leverage để đàm phán với BTC & Brand. Cam kết số lượng phân phối, đổi lấy suất chạy miễn phí + voucher sản phẩm.</p>
+        </div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-step-num">2</div>
+        <div class="fw-step-content">
+          <h4>Chuyển đổi — Escrow kéo user lên web</h4>
+          <p>Giải quyết pain point lớn nhất: mua bib trung gian bị lừa. Cơ chế giữ tiền tự động → lý do duy nhất để user rời Facebook sang BibDeal.com.</p>
+        </div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-step-num">3</div>
+        <div class="fw-step-content">
+          <h4>Giữ chân — Loyalty + Gamification</h4>
+          <p>Tích điểm mỗi giao dịch, quay số hàng tháng, streak mua bib liên tiếp. Tạo switching cost để user không quay lại group Facebook mua bán.</p>
+        </div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-step-num">4</div>
+        <div class="fw-step-content">
+          <h4>Monetize — Hoa hồng + Brand deals</h4>
+          <p>5-7% commission bib nhóm, phí escrow 2-3%, featured listing brands, data insights report bán cho BTC/Brand.</p>
+        </div>
+      </div>
+      <div class="fw-step">
+        <div class="fw-step-num">5</div>
+        <div class="fw-step-content">
+          <h4>Scale — Data flywheel</h4>
+          <p>400K emails + behavior data → segment chính xác → Brand trả phí cao hơn → Nhiều quà tặng hơn → Nhiều user hơn. Vòng lặp tự tăng tốc.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: PHASES ===== -->
+<section class="section" id="phases" style="background: rgba(255,255,255,0.01);">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> Lộ Trình Triển Khai</div>
+    <h2 class="section-title">4 Phases — Từ MVP đến Full Platform</h2>
+    <p class="section-desc">Mỗi phase phải đạt KPI trước khi sang phase tiếp. Không skip. Thứ tự này được thiết kế để giảm rủi ro và validate từng giả định.</p>
+  </div>
+
+  <div class="phases-grid">
+
+    <!-- PHASE 1 -->
+    <div class="phase-card phase-1 open">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-badge">Phase 1 — Nền Tảng</span>
+        <div class="phase-info">
+          <h3>Escrow + Mua Bib Nhóm (MVP)</h3>
+          <div class="timeline">Tháng 1-2 · Ưu tiên tối cao · Killer Feature</div>
+        </div>
+        <span class="phase-toggle">▼</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-content">
+          <div class="phase-why">
+            <strong>Tại sao làm trước?</strong> Đây là lý do DUY NHẤT để 70K members rời Facebook sang web. Không có escrow → BibDeal.com chỉ là 1 trang thông tin, không có giao dịch. Escrow giải quyết pain point số 1 của runner: <strong>sợ bị lừa khi mua bib trung gian</strong>.
+          </div>
+
+          <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Deliverables cụ thể</h4>
+          <div class="deliverables-grid">
+            <div class="deliverable">
+              <div class="deliverable-icon">🔒</div>
+              <h5>Hệ thống Escrow tự động</h5>
+              <p>Người mua chuyển tiền → BibDeal giữ → Người bán giao bib (xác nhận bằng screenshot email BTC) → BibDeal nhả tiền. Phí escrow 2-3% (người bán chịu). Dispute resolution trong 48h.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Payment Gateway</span>
+                <span class="tech-tag">VNPAY / Momo</span>
+                <span class="tech-tag">Webhook</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">🎫</div>
+              <h5>Mua Bib Nhóm</h5>
+              <p>Trang listing giải chạy sắp tới → đăng ký mua nhóm → đạt minimum quantity → lock deal với BTC (hoa hồng 5-7%). Countdown timer tạo urgency. Hiển thị số slot còn lại.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Next.js</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Cron Jobs</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">👤</div>
+              <h5>User Account cơ bản</h5>
+              <p>Đăng nhập bằng Facebook (tận dụng Bib Market), Google, Số điện thoại. Profile runner cơ bản: tên, giải đã chạy, thành tích. Đây là nền tảng cho loyalty system sau này.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">OAuth 2.0</span>
+                <span class="tech-tag">FB Login</span>
+                <span class="tech-tag">JWT</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📱</div>
+              <h5>Landing Page + SEO cơ bản</h5>
+              <p>Trang chủ BibDeal.com: danh sách giải chạy, tính năng escrow, mua nhóm. CTA rõ ràng. Responsive mobile first (80%+ runner dùng điện thoại). Schema markup cho event.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">SEO</span>
+                <span class="tech-tag">Mobile First</span>
+                <span class="tech-tag">Schema.org</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-card phase-2">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-badge">Phase 2 — Giữ Chân</span>
+        <div class="phase-info">
+          <h3>Loyalty + Gamification + Thông tin Runner</h3>
+          <div class="timeline">Tháng 3-4 · Khi đạt 2,000 users trên web</div>
+        </div>
+        <span class="phase-toggle">▼</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-content">
+          <div class="phase-why">
+            <strong>Tại sao phase 2?</strong> Sau khi có users trên web (Phase 1), cần tạo switching cost. Loyalty + gamification khiến user quay lại thường xuyên, không chỉ khi cần mua bib. Đồng thời, content hữu ích (lịch giải, code giảm giá) tạo <strong>lý do truy cập hàng ngày</strong>.
+          </div>
+
+          <div class="deliverables-grid">
+            <div class="deliverable">
+              <div class="deliverable-icon">⭐</div>
+              <h5>Hệ thống Tích Điểm</h5>
+              <p>Mua bib = tích điểm (1,000đ = 1 điểm). Giới thiệu bạn = 50 điểm. Review giải = 30 điểm. Đổi điểm lấy voucher Brand, giảm phí escrow, ưu tiên slot mua nhóm. Tier system: Bronze → Silver → Gold → Diamond.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Points Engine</span>
+                <span class="tech-tag">Tier System</span>
+                <span class="tech-tag">Redis Cache</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">🎰</div>
+              <h5>Quay Số May Mắn</h5>
+              <p>Mỗi giao dịch trong tháng = 1 lượt quay. Giải thưởng: suất chạy free (từ BTC tài trợ), voucher brand, điểm bonus. Quay số livestream cuối tháng trên Facebook → kéo traffic ngược từ group về web.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Random Engine</span>
+                <span class="tech-tag">Provably Fair</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📊</div>
+              <h5>Thống kê Giải Chạy VN</h5>
+              <p>Database tất cả giải chạy VN: ngày, địa điểm, cự ly, giá bib, deadline đăng ký. Lấy data từ TrueRace + crawl. Bộ lọc thông minh: theo tháng, tỉnh, cự ly, mức giá. Calendar view.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">TrueRace API</span>
+                <span class="tech-tag">Web Scraper</span>
+                <span class="tech-tag">Algolia</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">🏷️</div>
+              <h5>Tổng hợp Code Giảm Giá</h5>
+              <p>Trang tổng hợp tất cả mã giảm giá đang có: giải chạy, brand thể thao, dịch vụ runner. Cập nhật realtime. User submit code + verify. Đây là SEO magnet mạnh — runner Google "code giảm giá [tên giải]".</p>
+              <div class="tech-stack">
+                <span class="tech-tag">User Generated</span>
+                <span class="tech-tag">SEO</span>
+                <span class="tech-tag">Auto Verify</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-card phase-3">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-badge">Phase 3 — Monetize</span>
+        <div class="phase-info">
+          <h3>Brand Deals + B2B Dashboard</h3>
+          <div class="timeline">Tháng 5-7 · Khi đạt 5,000 users + 50 giao dịch/tháng</div>
+        </div>
+        <span class="phase-toggle">▼</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-content">
+          <div class="phase-why">
+            <strong>Tại sao phase 3?</strong> Brand chỉ hợp tác khi bạn có SỐ LIỆU chứng minh: bao nhiêu user, bao nhiêu giao dịch, demographic thế nào. Phase 1+2 tạo ra data đó. Không có data → Brand cho voucher nhỏ giọt. Có data → đàm phán package lớn, <strong>fee-based partnership</strong>.
+          </div>
+
+          <div class="deliverables-grid">
+            <div class="deliverable">
+              <div class="deliverable-icon">🤝</div>
+              <h5>Brand Partnership Portal</h5>
+              <p>Dashboard cho Brand tự đăng ký: upload voucher, set quota, chọn segment runner (marathon/trail/10K), tracking redemption realtime. Tiered pricing: Free (50 vouchers) → Premium (unlimited + featured placement).</p>
+              <div class="tech-stack">
+                <span class="tech-tag">B2B Dashboard</span>
+                <span class="tech-tag">Analytics</span>
+                <span class="tech-tag">Stripe</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📧</div>
+              <h5>Email Marketing Automation</h5>
+              <p>Kích hoạt 400K database qua Brevo. Phân segment: active buyer / passive browser / lapsed. Welcome series → Weekly newsletter → Event-triggered (giải mới mở đăng ký, bib sắp hết). Retarget user chưa hoàn tất giao dịch.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Brevo</span>
+                <span class="tech-tag">Segmentation</span>
+                <span class="tech-tag">Warm-up</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📈</div>
+              <h5>Data Insights Report</h5>
+              <p>Report bán cho BTC và Brand: demographics runner, purchase behavior, peak registration timing, price sensitivity analysis. Pricing: 5-15 triệu/report tùy depth. Đây là sản phẩm có margin cao nhất.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Analytics</span>
+                <span class="tech-tag">Auto Report</span>
+                <span class="tech-tag">PDF Gen</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📢</div>
+              <h5>BTC Dashboard</h5>
+              <p>Cho BTC tự đăng giải, quản lý quota bib nhóm, xem sales report, deposit suất chạy miễn phí cho quay số. Self-serve model giảm workload cho team BibDeal.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Self-Serve</span>
+                <span class="tech-tag">Admin Panel</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase-card phase-4">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-badge">Phase 4 — Scale</span>
+        <div class="phase-info">
+          <h3>Mở rộng Vertical + Automation toàn bộ</h3>
+          <div class="timeline">Tháng 8-12 · Khi BibDeal tự vận hành 80%+</div>
+        </div>
+        <span class="phase-toggle">▼</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-content">
+          <div class="phase-why">
+            <strong>Tại sao phase 4?</strong> Khi running đã ổn, mô hình đã proven → nhân rộng sang Pickleball (Matchpoint), Swimming, Cycling. Cùng cơ chế: escrow + group buy + loyalty. Đồng thời, AI Agent chạy tự động 80% operations → team tập trung partnership.
+          </div>
+
+          <div class="deliverables-grid">
+            <div class="deliverable">
+              <div class="deliverable-icon">🏓</div>
+              <h5>Mở rộng sang Pickleball</h5>
+              <p>Tích hợp Matchpoint.asia: đăng ký giải pickleball qua BibDeal, cùng hệ thống loyalty. Cross-sell: runner chơi pickleball → điểm dùng chung cả 2 platform.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">Matchpoint API</span>
+                <span class="tech-tag">Unified Loyalty</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">🤖</div>
+              <h5>Full AI Operations</h5>
+              <p>AI Agent tự động: crawl giải mới, update thông tin, trả lời FAQ, moderate giao dịch, generate weekly newsletter, detect fraud transaction. Team chỉ handle exceptions.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">AI Agents</span>
+                <span class="tech-tag">n8n</span>
+                <span class="tech-tag">GPT-4 API</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">📱</div>
+              <h5>Mobile App (nếu cần)</h5>
+              <p>Chỉ build app khi web traffic > 50K MAU. Push notification cho deal mới, flash sale bib, quay số. Không build sớm vì cost cao, adoption khó.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">React Native</span>
+                <span class="tech-tag">Push Notif</span>
+              </div>
+            </div>
+            <div class="deliverable">
+              <div class="deliverable-icon">🌏</div>
+              <h5>Regional Expansion</h5>
+              <p>Thái Lan, Philippines, Indonesia có thị trường running lớn. Cùng mô hình, localize payment + language. Đánh giá cơ hội dựa trên data Phase 1-3.</p>
+              <div class="tech-stack">
+                <span class="tech-tag">i18n</span>
+                <span class="tech-tag">Multi-currency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SECTION 3: AI AGENTS ===== -->
+<section class="section" id="ai">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> AI Agent Automation</div>
+    <h2 class="section-title">6 AI Agents Tiết Kiệm 60-70% Thời Gian Vận Hành</h2>
+    <p class="section-desc">Mỗi agent xử lý 1 luồng công việc lặp đi lặp lại. Triển khai bằng n8n (low-code) + Claude/GPT API. Không cần dev team lớn.</p>
+  </div>
+
+  <div class="ai-grid">
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">🕷️</div>
+        <div>
+          <h4>Race Crawler Agent</h4>
+          <span class="ai-tag">Phase 2</span>
+        </div>
+      </div>
+      <p>Tự động crawl website các BTC (VnExpress Marathon, Techcombank HM, HCMC Marathon...) → detect giải mới, update ngày đăng ký, giá bib, cự ly → push vào database BibDeal. Chạy mỗi 6h. Alert khi có giải mới.</p>
+      <div class="ai-savings">⏱ Tiết kiệm ~10h/tuần manual data entry</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">💬</div>
+        <div>
+          <h4>Customer Support Agent</h4>
+          <span class="ai-tag">Phase 1</span>
+        </div>
+      </div>
+      <p>Chatbot trên BibDeal.com + Facebook Messenger. Trả lời FAQ: "Escrow hoạt động thế nào?", "Khi nào nhận bib?", "Phí bao nhiêu?". Escalate sang human khi detect dispute hoặc câu hỏi phức tạp.</p>
+      <div class="ai-savings">⏱ Tiết kiệm ~15h/tuần support manual</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">📝</div>
+        <div>
+          <h4>Content Generator Agent</h4>
+          <span class="ai-tag">Phase 2</span>
+        </div>
+      </div>
+      <p>Auto-generate: weekly newsletter (top deals, giải sắp mở), Facebook post cho Bib Market, race preview articles, "so sánh giải A vs giải B". Human review trước khi publish. Tone: Hieu Sport Insider voice.</p>
+      <div class="ai-savings">⏱ Tiết kiệm ~8h/tuần content creation</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">🛡️</div>
+        <div>
+          <h4>Fraud Detection Agent</h4>
+          <span class="ai-tag">Phase 1</span>
+        </div>
+      </div>
+      <p>Monitor giao dịch escrow: detect patterns lừa đảo (account mới bán nhiều bib, giá thấp bất thường, bib giải đã qua deadline). Auto-flag + hold transaction. Rule-based ban đầu → ML model sau khi có data.</p>
+      <div class="ai-savings">🛡️ Giảm fraud rate xuống < 1%</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">📊</div>
+        <div>
+          <h4>Analytics & Report Agent</h4>
+          <span class="ai-tag">Phase 3</span>
+        </div>
+      </div>
+      <p>Auto-generate report cho Brand & BTC: bao nhiêu voucher redeemed, conversion rate, demographics breakdown, seasonal trends. Export PDF branded Hieu Sport Insider. Chạy monthly hoặc on-demand.</p>
+      <div class="ai-savings">⏱ Tiết kiệm ~6h/report × nhiều reports/tháng</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-header">
+        <div class="ai-icon">🔔</div>
+        <div>
+          <h4>Smart Notification Agent</h4>
+          <span class="ai-tag">Phase 2</span>
+        </div>
+      </div>
+      <p>Gửi notification cá nhân hóa: "Giải HCMC Marathon bạn quan tâm sắp hết early bird!", "Có 3 bib 21K Đà Nẵng mới đăng, giá tốt". Dựa trên behavior: giải đã xem, cự ly ưa thích, lịch sử mua.</p>
+      <div class="ai-savings">📈 Tăng conversion rate +25-40%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: REVENUE ===== -->
+<section class="section" id="revenue" style="background: rgba(255,255,255,0.01);">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> Mô Hình Doanh Thu</div>
+    <h2 class="section-title">5 Nguồn Thu — Đa Dạng & Bền Vững</h2>
+    <p class="section-desc">Ước tính conservative dựa trên 5,000 active users, 200 giao dịch/tháng, 10 Brand partners. Scale theo user growth.</p>
+  </div>
+
+  <div class="revenue-grid">
+    <div class="revenue-card">
+      <div class="revenue-icon">🎫</div>
+      <h4>Hoa hồng Bib Nhóm</h4>
+      <div class="amount">35-50M</div>
+      <div class="detail">5-7% commission × trung bình 500 bib/tháng × giá trung bình 1.2M/bib. Margin cao nhất khi deal với BTC trực tiếp.</div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon">🔒</div>
+      <h4>Phí Escrow</h4>
+      <div class="amount">8-15M</div>
+      <div class="detail">2-3% phí giao dịch × 200 transactions/tháng × trung bình 800K/giao dịch. Người bán chịu phí. Volume tăng theo trust.</div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon">🎁</div>
+      <h4>Brand Partnership</h4>
+      <div class="amount">15-30M</div>
+      <div class="detail">Featured listing: 3-5M/tháng/brand. Targeted voucher distribution: 2-3M/campaign. Data insights report: 5-15M/report.</div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon">📧</div>
+      <h4>Email Sponsorship</h4>
+      <div class="amount">10-20M</div>
+      <div class="detail">Banner trong newsletter (400K subscribers): 5-10M/slot/tháng. Dedicated email blast: 8-15M/lần. Chỉ chạy khi open rate > 20%.</div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-icon">🏷️</div>
+      <h4>Affiliate & Code</h4>
+      <div class="amount">5-10M</div>
+      <div class="detail">Affiliate link đăng ký giải (3-5% per registration). Code giảm giá exclusive → track conversion cho Brand. Passive income, scale theo traffic.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px; padding:24px 28px; background:var(--bg-card); border:1px solid var(--border-gold); border-radius:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <div style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Tổng doanh thu ước tính / tháng (Phase 3)</div>
+        <div style="font-size:36px; font-weight:800; font-family:'JetBrains Mono',monospace; color:var(--gold); margin-top:4px;">73 — 125M VNĐ</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px; color:var(--text-muted);">Chi phí vận hành ước tính</div>
+        <div style="font-size:20px; font-weight:700; font-family:'JetBrains Mono',monospace; color:var(--red); margin-top:4px;">~25-35M VNĐ</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Server, AI API, Brevo, 1-2 part-time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5: RISKS ===== -->
+<section class="section" id="risks">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> Phân Tích Rủi Ro</div>
+    <h2 class="section-title">Rủi Ro & Giải Pháp — Nhìn Thẳng Vào Vấn Đề</h2>
+    <p class="section-desc">Không né tránh. Đây là những rủi ro thực tế sẽ xảy ra, không phải "có thể xảy ra".</p>
+  </div>
+
+  <table class="risk-table">
+    <thead>
+      <tr>
+        <th style="width:20%">Rủi Ro</th>
+        <th style="width:8%">Mức</th>
+        <th style="width:36%">Mô Tả Cụ Thể</th>
+        <th style="width:36%">Giải Pháp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>User không rời Facebook</strong></td>
+        <td><span class="risk-level risk-high">Cao</span></td>
+        <td>70K members đã quen mua bán trên group. Thêm 1 bước (vào web) = friction. Nhiều người sẽ không chịu.</td>
+        <td>Escrow là "bắt buộc" — chỉ giao dịch an toàn trên web. Post trên group chỉ là listing, mọi thanh toán redirect sang BibDeal. Incentive: giảm phí escrow tháng đầu, bonus điểm cho giao dịch đầu tiên.</td>
+      </tr>
+      <tr>
+        <td><strong>Dispute escrow phức tạp</strong></td>
+        <td><span class="risk-level risk-high">Cao</span></td>
+        <td>Người bán nói đã giao bib, người mua nói chưa nhận. Screenshot giả, thông tin sai. Nếu xử lý tệ → mất trust ngay.</td>
+        <td>Quy trình dispute rõ ràng: yêu cầu screenshot email xác nhận từ BTC (khó fake). Timeout 72h auto-refund nếu không chứng minh. Reserve fund 5% doanh thu để cover dispute.</td>
+      </tr>
+      <tr>
+        <td><strong>BTC không hợp tác</strong></td>
+        <td><span class="risk-level risk-med">TB</span></td>
+        <td>BTC muốn bán bib trực tiếp, không qua trung gian. Hoặc đã có đối tác bán bib nhóm khác.</td>
+        <td>Leverage TrueRace relationship — BTC dùng TrueRace timing system sẽ dễ đàm phán hơn. Offer free data report đổi lấy quota bib nhóm. Start với BTC nhỏ, build case study.</td>
+      </tr>
+      <tr>
+        <td><strong>Pháp lý giữ tiền trung gian</strong></td>
+        <td><span class="risk-level risk-med">TB</span></td>
+        <td>Việt Nam chưa có khung pháp lý rõ ràng cho escrow P2P. Nếu số tiền giữ lớn → rủi ro pháp lý.</td>
+        <td>Giai đoạn đầu: giới hạn giá trị mỗi giao dịch < 5 triệu. Tham vấn luật sư về mô hình "đại lý thanh toán" thay vì "escrow". Xem xét liên kết với ví điện tử có license (Momo, ZaloPay).</td>
+      </tr>
+      <tr>
+        <td><strong>Brand cho voucher "rác"</strong></td>
+        <td><span class="risk-level risk-low">Thấp</span></td>
+        <td>Brand đẩy voucher giảm 5% cho đơn > 2 triệu — không ai dùng. Ảnh hưởng uy tín BibDeal.</td>
+        <td>Curation nghiêm ngặt: minimum giảm 15% hoặc quà hiện vật giá trị > 100K. Review trước khi publish. Rating system cho voucher. Reject Brand không đạt chuẩn.</td>
+      </tr>
+      <tr>
+        <td><strong>Cạnh tranh từ BTC lớn</strong></td>
+        <td><span class="risk-level risk-low">Thấp</span></td>
+        <td>VnExpress Marathon, HCMC Run tự build platform bán bib. Không cần qua BibDeal.</td>
+        <td>BibDeal giá trị ở AGGREGATION — 1 nơi xem tất cả giải. BTC lớn chỉ bán giải của họ. Giữ vị thế "TripAdvisor cho running" chứ không cạnh tranh trực tiếp với BTC.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== SECTION 6: KPIs ===== -->
+<section class="section" id="kpis" style="background: rgba(255,255,255,0.01);">
+  <div class="section-header">
+    <div class="section-label"><span class="dot"></span> KPIs Theo Phase</div>
+    <h2 class="section-title">Chỉ Số Đo Lường — Gate Trước Khi Chuyển Phase</h2>
+    <p class="section-desc">Mỗi phase có gate KPI. KHÔNG chuyển phase nếu chưa đạt. Đo hàng tuần, review hàng tháng.</p>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--red);">Phase 1 Gate — Trước khi vào Phase 2</h3>
+  <div class="kpi-grid" style="margin-bottom:40px;">
+    <div class="kpi-card">
+      <div class="kpi-value">2,000</div>
+      <div class="kpi-label">Registered Users</div>
+      <div class="kpi-target">Từ 70K members convert ~3%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">50+</div>
+      <div class="kpi-label">Escrow Transactions</div>
+      <div class="kpi-target">Trong 2 tháng đầu</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">&lt;2%</div>
+      <div class="kpi-label">Dispute Rate</div>
+      <div class="kpi-target">Tối đa 1/50 giao dịch dispute</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">100+</div>
+      <div class="kpi-label">Group Buy Bibs</div>
+      <div class="kpi-target">Ít nhất 2 deal nhóm thành công</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--gold);">Phase 2 Gate — Trước khi vào Phase 3</h3>
+  <div class="kpi-grid" style="margin-bottom:40px;">
+    <div class="kpi-card">
+      <div class="kpi-value">5,000</div>
+      <div class="kpi-label">Active Users / Tháng</div>
+      <div class="kpi-target">MAU, login ít nhất 1 lần</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">200+</div>
+      <div class="kpi-label">Transactions / Tháng</div>
+      <div class="kpi-target">Escrow + Group Buy cộng lại</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">40%</div>
+      <div class="kpi-label">Retention Rate</div>
+      <div class="kpi-target">User quay lại trong 30 ngày</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">3+</div>
+      <div class="kpi-label">BTC Partners</div>
+      <div class="kpi-target">BTC đồng ý deal nhóm official</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--blue);">Phase 3 Gate — Trước khi vào Phase 4</h3>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-value">70M+</div>
+      <div class="kpi-label">Revenue / Tháng</div>
+      <div class="kpi-target">Từ tất cả nguồn thu</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">10+</div>
+      <div class="kpi-label">Brand Partners</div>
+      <div class="kpi-target">Trả phí hoặc active voucher</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">80%</div>
+      <div class="kpi-label">Auto Operations</div>
+      <div class="kpi-target">AI Agent xử lý 80% routine</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">15K+</div>
+      <div class="kpi-label">Email Active Subs</div>
+      <div class="kpi-target">Open rate > 20%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <strong>BibDeal.com</strong> — Strategy Blueprint by <strong>Hieu Sport Insider</strong><br>
+  <span style="color:var(--text-muted);">Confidential · March 2026 · Version 1.0</span>
+</div>
+
+<script>
+// Phase toggle
+function togglePhase(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+// Nav tabs
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = document.getElementById(tab.dataset.section);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Active tab on scroll
+const sections = document.querySelectorAll('.section');
+const navTabs = document.querySelectorAll('.nav-tab');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop - 100;
+    if (window.scrollY >= top) current = section.id;
+  });
+  navTabs.forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.dataset.section === current) tab.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
